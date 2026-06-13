@@ -4,3 +4,30 @@ Bot: Hello! How can I help you today?
 User: bye
 Bot: Goodbye! Happy Learning!
 
+User: hello
+Bot: Hello! How can I help you today?
+
+User: stats
+Bot: 
+===== STATISTICS =====
+Questions Asked : 2
+Quiz Attempts   : 0
+Correct Answers : 0
+======================
+
+
+User: quiz
+Bot: Quiz Finished! Your Score: 2/5
+
+User: stats
+Bot: 
+===== STATISTICS =====
+Questions Asked : 4
+Quiz Attempts   : 1
+Correct Answers : 2
+======================
+
+
+User: bye
+Bot: Goodbye! Happy Learning!
+
