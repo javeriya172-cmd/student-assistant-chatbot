@@ -1,0 +1,6 @@
+User: hi
+Bot: Hello! How can I help you today?
+
+User: bye
+Bot: Goodbye! Happy Learning!
+

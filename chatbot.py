@@ -2,6 +2,16 @@ import json
 import random
 
 # ==========================
+# SAVE CHAT HISTORY
+# ==========================
+
+def save_chat(user_message, bot_response):
+    with open("chat_history.txt", "a", encoding="utf-8") as file:
+        file.write(f"User: {user_message}\n")
+        file.write(f"Bot: {bot_response}\n\n")
+
+
+# ==========================
 # LOAD KNOWLEDGE BASE
 # ==========================
 
@@ -17,27 +27,30 @@ files = [
 ]
 
 for file_name in files:
-    with open(file_name, "r") as file:
+    with open(file_name, "r", encoding="utf-8") as file:
         data = json.load(file)
         knowledge.update(data)
+
 
 # ==========================
 # LOAD QUIZ QUESTIONS
 # ==========================
 
-with open("data/quiz.json", "r") as file:
+with open("data/quiz.json", "r", encoding="utf-8") as file:
     quiz_questions = json.load(file)
+
 
 # ==========================
 # WELCOME MESSAGE
 # ==========================
 
 print("=" * 50)
-print("     STUDENT ASSISTANT CHATBOT")
+print("      STUDENT ASSISTANT CHATBOT")
 print("=" * 50)
 print("Type 'help' for commands")
 print("Type 'bye' to exit")
 print("=" * 50)
+
 
 # ==========================
 # CHAT LOOP
@@ -49,52 +62,124 @@ while True:
 
     # EXIT
     if question == "bye":
-        print("Bot: Goodbye! Happy Learning!")
+
+        response = "Goodbye! Happy Learning!"
+
+        print("Bot:", response)
+
+        save_chat(question, response)
+
         break
 
     # HELP
     elif question == "help":
-        print("\nCommands:")
-        print("help   - Show commands")
-        print("topics - Show available subjects")
-        print("quiz   - Start a quiz")
-        print("bye    - Exit chatbot")
+
+        response = """
+Commands:
+help     - Show commands
+topics   - Show available subjects
+quiz     - Start a quiz
+history  - View chat history
+bye      - Exit chatbot
+"""
+
+        print(response)
+
+        save_chat(question, response)
 
     # TOPICS
     elif question == "topics":
-        print("\nAvailable Subjects:")
-        print("- Health")
-        print("- Programming")
-        print("- Science")
-        print("- Mathematics")
-        print("- History")
-        print("- Technology")
+
+        response = """
+Available Subjects:
+- Health
+- Programming
+- Science
+- Mathematics
+- History
+- Technology
+"""
+
+        print(response)
+
+        save_chat(question, response)
+
+    # CHAT HISTORY
+    elif question == "history":
+
+        try:
+            with open("chat_history.txt", "r", encoding="utf-8") as file:
+                print("\n===== CHAT HISTORY =====")
+                print(file.read())
+                print("========================")
+        except FileNotFoundError:
+            print("No chat history found.")
 
     # GREETINGS
     elif question in ["hello", "hi", "hey"]:
-        print("Bot: Hello! How can I help you today?")
+
+        response = "Hello! How can I help you today?"
+
+        print("Bot:", response)
+
+        save_chat(question, response)
 
     elif question == "good morning":
-        print("Bot: Good morning! Have a great day.")
+
+        response = "Good morning! Have a great day."
+
+        print("Bot:", response)
+
+        save_chat(question, response)
 
     elif question == "good afternoon":
-        print("Bot: Good afternoon!")
+
+        response = "Good afternoon!"
+
+        print("Bot:", response)
+
+        save_chat(question, response)
 
     elif question == "good evening":
-        print("Bot: Good evening!")
+
+        response = "Good evening!"
+
+        print("Bot:", response)
+
+        save_chat(question, response)
 
     # EMOTIONS
     elif "happy" in question:
-        print("Bot: That's wonderful to hear!")
+
+        response = "That's wonderful to hear!"
+
+        print("Bot:", response)
+
+        save_chat(question, response)
 
     elif "sad" in question:
-        print("Bot: I hope things get better soon.")
+
+        response = "I hope things get better soon."
+
+        print("Bot:", response)
+
+        save_chat(question, response)
 
     elif "stressed" in question:
-        print("Bot: Try taking one task at a time.")
+
+        response = "Try taking one task at a time."
+
+        print("Bot:", response)
+
+        save_chat(question, response)
 
     elif "tired" in question:
-        print("Bot: Make sure you get enough rest.")
+
+        response = "Make sure you get enough rest."
+
+        print("Bot:", response)
+
+        save_chat(question, response)
 
     # QUIZ MODE
     elif question == "quiz":
@@ -106,7 +191,8 @@ while True:
             min(5, len(quiz_questions))
         )
 
-        print("\nStarting Quiz...\n")
+        print("\nStarting Quiz...")
+        print("Type 'exit' anytime to leave the quiz.\n")
 
         for q in questions:
 
@@ -114,46 +200,72 @@ while True:
 
             answer = input("Your Answer: ").lower().strip()
 
+            if answer == "exit":
+                print("Exiting Quiz...")
+                break
+
             if answer == quiz_questions[q]:
+
                 print("Correct!\n")
+
                 score += 1
 
             else:
+
                 print("Wrong!")
+
                 print("Correct Answer:", quiz_questions[q])
+
                 print()
-            if answer =="exit":
-                print("Exiting quiz")
-                break     
+
+        response = f"Quiz Finished! Your Score: {score}/{len(questions)}"
 
         print("=" * 30)
-        print("Quiz Finished!")
-        print(f"Your Score: {score}/{len(questions)}")
+        print(response)
         print("=" * 30)
 
-       # Exact Match
+        save_chat(question, response)
+
+    # EXACT MATCH
     elif question in knowledge:
-        print("Bot:", knowledge[question])
 
-      # Keyword Search
-else:
+        response = knowledge[question]
 
-    found = False
+        print("Bot:", response)
 
-    for key, answer in knowledge.items():
+        save_chat(question, response)
 
-        key_words = key.lower().split()
-        user_words = question.lower().split()
+    # KEYWORD SEARCH
+    else:
 
-        for word in user_words:
+        found = False
 
-            if word in key_words:
-                print("Bot:", answer)
-                found = True
+        for key, answer in knowledge.items():
+
+            key_words = key.lower().split()
+            user_words = question.lower().split()
+
+            for word in user_words:
+
+                if word in key_words:
+
+                    response = answer
+
+                    print("Bot:", response)
+
+                    save_chat(question, response)
+
+                    found = True
+
+                    break
+
+            if found:
                 break
 
-        if found:
-            break
+        if not found:
 
-    if not found:
-        print("Bot: Sorry, I don't know that answer yet.")
+            response = "Sorry, I don't know that answer yet."
+
+            print("Bot:", response)
+
+            save_chat(question, response)
